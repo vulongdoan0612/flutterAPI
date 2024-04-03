@@ -99,4 +99,64 @@ userRouter.get("/get-profile", checkAccessToken, async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
+userRouter.get("/get-items", async (req, res) => {
+  try {
+    res.status(200).json({
+      success: true,
+      message: "Lấy danh sách thành công!",
+      status_code: 200,
+      data: [
+        {
+          id: 1,
+          name: "Áo thun",
+          parentId: null,
+          children: [
+            {
+              id: 3,
+              name: "Áo thun cho nam",
+              parentId: 1,
+            },
+            {
+              id: 4,
+              name: "Áo thun cho nữ",
+              parentId: 1,
+            },
+            {
+              id: 5,
+              name: "Áo thun cho trẻ",
+              parentId: 1,
+            },
+          ],
+        },
+
+        {
+          id: 2,
+          name: "Áo khoác mùa đông",
+          parentId: null,
+          children: [
+            {
+              id: 6,
+              name: "Áo khoác cho nam",
+              parentId: 2,
+            },
+            {
+              id: 7,
+              name: "Áo khoác cho nữ",
+              parentId: 2,
+            },
+            {
+              id: 8,
+              name: "Áo khoác cho trẻ",
+              parentId: 2,
+            },
+          ],
+        },
+      ],
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: error.message });
+  }
+});
 export default userRouter;
