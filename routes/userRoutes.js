@@ -19,8 +19,13 @@ userRouter.post("/register", async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = new User({ fullname, password: hashedPassword, phone, email });
     await user.save();
-
-    res.status(201).json({ message: "Tài khoản được đăng ký thành công." });
+    const userData = await User.findOne({ email }).select("-password -__v");
+    res.status(201).json({
+      success: true,
+      message: "Tài khoản được đăng ký thành công.",
+      status_code: 201,
+      data: userData,
+    });
   } catch (error) {
     res.status(500).json({ error: "Xin vui lòng hãy thử lại sau." });
   }
@@ -32,10 +37,23 @@ userRouter.post("/login", async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "Tài khoản không tìm thấy." });
     }
+    const userData = await User.findOne({ email }).select("-password -__v");
+
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (isPasswordValid) {
-      const token = jwt.sign({ id: user._id }, "VinalinkGroup!2020");
-      res.status(200).json({ token });
+      const tokenUser = jwt.sign({ id: user._id }, "VinalinkGroup!2020");
+      res.status(200).json({
+        success: true,
+        message: "Tài khoản đăng nhập thành công.",
+        status_code: 200,
+        data: {
+          token: tokenUser,
+          _id: userData._id,
+          fullname: userData.fullname,
+          phone: userData.phone,
+          email: userData.email,
+        },
+      });
     } else {
       res.status(401).json({ message: "Sai mật khẩu hoặc số điện thoại." });
     }
