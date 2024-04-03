@@ -100,7 +100,7 @@ userRouter.get("/get-profile", checkAccessToken, async (req, res) => {
   }
 });
 
-userRouter.get("/get-items", async (req, res) => {
+userRouter.get("/get-categories", async (req, res) => {
   try {
     res.status(200).json({
       success: true,
